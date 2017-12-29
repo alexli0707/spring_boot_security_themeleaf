@@ -29,9 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/fonts/**").permitAll()  // 允许访问资源
-                .antMatchers("/", "/home", "/about").permitAll()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER")
+                .antMatchers("/", "/home", "/about").permitAll() //允许访问这三个路由
+                .antMatchers("/admin/**").hasAnyRole("ADMIN")   // 满足该条件下的路由需要ROLE_ADMIN的角色
+                .antMatchers("/user/**").hasAnyRole("USER")     // 满足该条件下的路由需要ROLE_USER的角色
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,14 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);           //自定义异常处理
     }
 
 
     // create two users, admin and user
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.inMemoryAuthentication()
                 .withUser("user").password("user").roles("USER")
                 .and()
